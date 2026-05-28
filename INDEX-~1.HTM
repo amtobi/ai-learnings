@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Advantage Learnings — Anna's Knowledge Hub</title>
+<style>
+:root {
+  --bg: #0b0d12;
+  --surface: #14171f;
+  --surface-2: #1c2030;
+  --border: #2a2f42;
+  --text: #e8eaf2;
+  --text-muted: #9aa0b4;
+  --accent: #d4a85a;
+  --accent-2: #b88c3e;
+  --accent-soft: rgba(212, 168, 90, 0.12);
+  --success: #6ec896;
+  --max-width: 1180px;
+  --radius: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(800px 400px at 10% -10%, rgba(212,168,90,0.08), transparent 60%),
+    radial-gradient(600px 300px at 110% 0%, rgba(110,200,150,0.05), transparent 60%),
+    var(--bg);
+}
+
+/* Topbar */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(11,13,18,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 28px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+.brand p { font-size: 12px; color: var(--text-muted); }
+.logo {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #1a1d2a;
+  font-weight: 800;
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+  letter-spacing: 0.02em;
+}
+
+.topnav { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.topnav a {
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+.topnav a:hover { color: var(--text); background: var(--surface); }
+.topnav a.active { color: var(--accent); background: var(--accent-soft); }
+
+.search-wrap input {
+  width: 280px;
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.search-wrap input:focus { border-color: var(--accent); }
+
+main { max-width: var(--max-width); margin: 0 auto; padding: 40px 28px 80px; }
+
+/* Tabs */
+.tab { display: none; }
+.tab.active { display: block; animation: fade 0.2s ease; }
+@keyframes fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+h2 { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+h3 { font-size: 22px; font-weight: 600; margin: 36px 0 14px; letter-spacing: -0.01em; }
+h4 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+.lede { font-size: 18px; color: var(--text-muted); margin-bottom: 28px; max-width: 760px; }
+
+/* Home */
+.hero { padding: 48px 0 16px; }
+.hero h2 { font-size: 44px; max-width: 800px; line-height: 1.1; margin-bottom: 16px; }
+.cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.cta {
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  transition: all 0.15s ease;
+}
+.cta:hover { transform: translateY(-1px); border-color: var(--accent); }
+.cta.primary { background: var(--accent); color: #1a1d2a; border-color: var(--accent); }
+.cta.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 40px 0 12px;
+}
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat .num { font-size: 28px; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+.stat .lbl { font-size: 13px; color: var(--text-muted); }
+
+.principles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 16px 0 32px;
+}
+.principle { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+.principle h4 { color: var(--accent); margin-bottom: 10px; }
+.principle p { color: var(--text-muted); font-size: 15px; }
+
+.action-list {
+  list-style: none;
+  counter-reset: item;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0 40px;
+  padding: 0;
+}
+.action-list li {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px 14px 50px;
+  position: relative;
+  counter-increment: item;
+  font-size: 15px;
+}
+.action-list li::before {
+  content: counter(item);
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+.action-list a { color: var(--accent); text-decoration: none; }
+.action-list a:hover { text-decoration: underline; }
+
+/* Progress card */
+.progress-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 16px;
+}
+.progress-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 16px;
+}
+.progress-head h4 {
+  font-size: 14px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+.progress-head p { font-size: 14px; color: var(--text-muted); }
+#reset-progress {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+#reset-progress:hover { color: var(--text); border-color: var(--text-muted); }
+.progress-bar { height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--success));
+  transition: width 0.4s ease;
+}
+
+/* Month-jump nav */
+.month-jump {
+  position: sticky;
+  top: 80px;
+  z-index: 10;
+  background: rgba(11,13,18,0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.month-jump a {
+  display: inline-grid;
+  place-items: center;
+  min-width: 36px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  transition: all 0.15s ease;
+}
+.month-jump a:hover { background: var(--accent-soft); color: var(--accent); }
+
+/* Curriculum */
+.module {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 18px;
+  scroll-margin-top: 150px;
+}
+.module-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.month {
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.module h3 { font-size: 22px; margin: 0; }
+.module > p.module-intro {
+  color: var(--text-muted);
+  margin-bottom: 18px;
+  font-size: 16px;
+  line-height: 1.6;
+  border-left: 2px solid var(--accent);
+  padding-left: 14px;
+  font-style: italic;
+}
+
+.lesson {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px 24px;
+  margin: 14px 0;
+  scroll-margin-top: 150px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.lesson.flash {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.lesson.done { opacity: 0.72; }
+.lesson.done h4 {
+  text-decoration: line-through;
+  text-decoration-color: rgba(212,168,90,0.4);
+  text-decoration-thickness: 2px;
+}
+.lesson h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.lesson p { font-size: 15px; line-height: 1.65; color: var(--text); margin-bottom: 12px; }
+.lesson p:last-child { margin-bottom: 0; }
+.lesson p strong { color: var(--text); font-weight: 600; }
+.lesson p em { color: var(--text); }
+.lesson code {
+  background: rgba(212, 168, 90, 0.1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: "SF Mono", Menlo, monospace;
+}
+
+.lesson-controls {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.lesson-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+.lesson-check input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+.lesson-check input[type="checkbox"]:hover { border-color: var(--accent); }
+.lesson-check input[type="checkbox"]:checked {
+  background: var(--success);
+  border-color: var(--success);
+}
+.lesson-check input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #0a1a12;
+  font-size: 12px;
+  font-weight: 800;
+}
+.lesson-anchor {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  width: 24px;
+  height: 24px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  text-transform: none;
+  letter-spacing: 0;
+  position: relative;
+}
+.lesson-anchor:hover { color: var(--accent); border-color: var(--border); }
+.lesson-anchor.copied { color: var(--success); border-color: var(--success); }
+.lesson-anchor.copied::after {
+  content: "link copied";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--success);
+  color: #0a1a12;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lesson-prompt {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px 14px;
+  margin: 14px 0;
+  position: relative;
+}
+.lesson-prompt h5 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.lesson-prompt pre {
+  font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #d8dbe8;
+}
+.lesson-prompt .copy-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.lesson-key {
+  background: rgba(110, 200, 150, 0.07);
+  border-left: 3px solid var(--success);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-top: 12px;
+}
+.lesson-key strong { color: var(--success); }
+
+.takeaway {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: rgba(110, 200, 150, 0.06);
+  border-left: 3px solid var(--success);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text);
+}
+.takeaway strong { color: var(--success); }
+
+/* Knowledge base */
+.kb-filter { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0 24px; }
+.filter-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.filter-btn:hover { color: var(--text); }
+.filter-btn.active {
+  background: var(--accent);
+  color: #1a1d2a;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.kb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+.kb-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+.kb-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.kb-card .kb-tag {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  font-weight: 600;
+}
+.kb-card h4 { font-size: 15px; line-height: 1.35; }
+.kb-card p { font-size: 13px; color: var(--text-muted); }
+.kb-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 24px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+/* Search results */
+.search-section-h {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin: 24px 0 12px;
+  font-weight: 600;
+}
+.search-section-h:first-child { margin-top: 4px; }
+.search-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.search-hit {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.15s ease;
+}
+.search-hit:hover { border-color: var(--accent); transform: translateY(-1px); }
+.search-hit-meta {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.search-hit h4 { font-size: 15px; color: var(--text); margin-bottom: 4px; }
+.search-hit p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+mark {
+  background: rgba(212, 168, 90, 0.32);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+/* Cheat sheets */
+.cheat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 18px;
+}
+.cheat-sub { color: var(--text-muted); margin-bottom: 16px; font-size: 15px; }
+.prompt-block {
+  position: relative;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin: 12px 0 16px;
+}
+.prompt-block pre {
+  font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #d8dbe8;
+}
+.copy-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--accent);
+  color: #1a1d2a;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.copy-btn:hover { background: var(--accent-2); }
+.copy-btn.copied { background: var(--success); color: #0a1a12; }
+
+.big-steps {
+  list-style: none;
+  counter-reset: bs;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.big-steps li { counter-increment: bs; position: relative; padding-left: 56px; }
+.big-steps li::before {
+  content: counter(bs);
+  position: absolute;
+  left: 0; top: 0;
+  width: 40px; height: 40px;
+  background: var(--accent);
+  color: #1a1d2a;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 18px;
+}
+.big-steps h4 { margin-bottom: 6px; }
+.big-steps p { color: var(--text-muted); font-size: 14px; }
+
+.cheat-mistake {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: rgba(212, 90, 90, 0.08);
+  border-left: 3px solid #d65a5a;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.problem-first { display: flex; flex-direction: column; gap: 12px; }
+.problem-first .step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--surface-2);
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.problem-first .step .num {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  color: #1a1d2a;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.problem-first .step h4 { font-size: 15px; }
+.problem-first .step p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+.numbered {
+  list-style: decimal;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+.numbered li { font-size: 15px; color: var(--text); }
+
+.bare {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+.bare li { padding-left: 18px; position: relative; font-size: 15px; }
+.bare li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+
+.cheat-notes { margin-top: 12px; font-size: 14px; color: var(--text-muted); }
+.cheat-notes strong { color: var(--text); }
+.cheat-notes pre {
+  margin-top: 10px;
+  padding: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: "SF Mono", Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: var(--text);
+}
+
+.stack-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+.stack-table th, .stack-table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.stack-table th {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.stack-table tbody tr:hover { background: var(--surface-2); }
+
+/* Tools */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tool-card h4 { display: flex; align-items: center; gap: 8px; font-size: 18px; }
+.tool-card .tool-tag {
+  font-size: 11px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tool-card .tool-purpose { font-size: 13px; color: var(--text-muted); font-style: italic; }
+.tool-card ul { margin: 4px 0 0 18px; font-size: 13.5px; color: var(--text); }
+.tool-card ul li { margin-bottom: 4px; }
+
+/* Experts */
+.expert {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 16px;
+}
+.expert h3 { margin-top: 0; }
+.expert p { color: var(--text); margin-bottom: 12px; font-size: 15px; }
+.expert ul { margin-left: 20px; font-size: 14.5px; }
+.expert ul li { margin-bottom: 8px; color: var(--text); }
+
+/* Footer */
+footer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 32px 28px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+}
+.footnote { font-size: 12px; opacity: 0.7; margin-top: 4px; }
+
+/* Mobile */
+@media (max-width: 880px) {
+  .topbar { grid-template-columns: 1fr; gap: 12px; padding: 12px 16px; }
+  .topnav { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+  .topnav a { white-space: nowrap; }
+  .search-wrap input { width: 100%; }
+  main { padding: 24px 16px 60px; }
+  h2 { font-size: 28px; }
+  .hero h2 { font-size: 32px; }
+  .module, .cheat, .expert { padding: 20px; }
+  .month-jump { position: static; overflow-x: auto; flex-wrap: nowrap; }
+  .lesson h4 { flex-direction: column; align-items: flex-start; }
+  .lesson-controls { margin-left: 0; margin-top: 4px; }
+  .progress-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .module, .lesson { scroll-margin-top: 100px; }
+}
+
+/* Print */
+@media print {
+  .topbar, .month-jump, .lesson-controls, .progress-card, .cta-row, .kb-filter, .copy-btn, footer {
+    display: none !important;
+  }
+  body { background: #fff; color: #000; }
+  .tab { display: block !important; page-break-before: always; }
+  .tab:first-of-type { page-break-before: avoid; }
+  .module, .cheat, .expert, .lesson, .kb-card, .tool-card {
+    background: #fff;
+    border: 1px solid #ccc;
+    color: #000;
+    page-break-inside: avoid;
+  }
+  h2, h3, h4 { color: #000; }
+  a { color: #000; text-decoration: underline; }
+  .lesson-prompt pre, .prompt-block pre { background: #f4f4f4; color: #000; }
+}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">AI</span>
+    <div>
+      <h1>AI Advantage Learnings</h1>
+      <p>14 days of focused study, distilled from 14 months of AI Advantage Club. For Anna.</p>
+    </div>
+  </div>
+  <nav class="topnav">
+    <a href="#home" data-tab="home" class="active">Home</a>
+    <a href="#curriculum" data-tab="curriculum">Curriculum</a>
+    <a href="#knowledge" data-tab="knowledge">Knowledge Base</a>
+    <a href="#cheatsheets" data-tab="cheatsheets">Cheat Sheets</a>
+    <a href="#tools" data-tab="tools">Tool Stack</a>
+    <a href="#experts" data-tab="experts">Expert Series</a>
+  </nav>
+  <div class="search-wrap">
+    <input type="search" id="search" placeholder="Search lessons, frameworks, prompts..." />
+  </div>
+</header>
+
+<main id="content">
+  <section id="home" class="tab active">
+    <div class="hero">
+      <h2>Everything you should have learned. In one place.</h2>
+      <p class="lede">
+        14 days of focused study, drawn from 14 months of AI Advantage Club, organized so you can finally use it.
+        Three ways in: a curriculum to walk, a knowledge base to search, cheat sheets to grab and go.
+      </p>
+      <div class="cta-row">
+        <a class="cta primary" href="#curriculum" data-tab="curriculum">Walk the curriculum</a>
+        <a class="cta" href="#knowledge" data-tab="knowledge">Search by topic</a>
+        <a class="cta" href="#cheatsheets" data-tab="cheatsheets">Grab a cheat sheet</a>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat"><span class="num">38</span><span class="lbl">Resource guides</span></div>
+      <div class="stat"><span class="num">22</span><span class="lbl">Weekly hacks</span></div>
+      <div class="stat"><span class="num">11</span><span class="lbl">Live recordings</span></div>
+      <div class="stat"><span class="num">5</span><span class="lbl">Expert sessions</span></div>
+      <div class="stat"><span class="num">10+</span><span class="lbl">Tools covered</span></div>
+      <div class="stat"><span class="num">3</span><span class="lbl">Skill tracks</span></div>
+    </div>
+
+    <h3>The thread that runs through everything</h3>
+    <p>
+      Across every guide, every hack, every expert interview, three ideas keep showing up.
+      They are not technical. They are the things that separate people who got real value out of AI from people who stayed busy.
+    </p>
+    <div class="principles">
+      <div class="principle">
+        <h4>1. Capture what works.</h4>
+        <p>
+          When you nail a result, you do not have a result. You have a process. Save the process.
+          Turn the chat into a playbook. Turn the playbook into a Custom GPT, a Gem, or a Claude Skill.
+          Stop rebuilding from scratch every Monday.
+        </p>
+      </div>
+      <div class="principle">
+        <h4>2. Lead with the problem, not the tool.</h4>
+        <p>
+          Tools change every week. Problems do not. Define the recurring task you want to win.
+          Then choose the tool. Sabrina Ramonov calls this a "problem-first AI system." It is the only thing that scales.
+        </p>
+      </div>
+      <div class="principle">
+        <h4>3. Structure beats cleverness.</h4>
+        <p>
+          A clear five-block prompt — instruction, context, format, tone, clarifying questions — beats a long, wandering one every time.
+          Frameworks are not handcuffs. They are how you stop fixing answers and start using them.
+        </p>
+      </div>
+    </div>
+
+    <h3>If you only do five things from this whole course</h3>
+    <ol class="action-list">
+      <li><strong>Adopt the 5-block prompt template.</strong> Save it. Use it once today. <a href="#cheatsheets" data-tab="cheatsheets">→ Cheat sheet</a></li>
+      <li><strong>Pick one chat where you nailed it.</strong> Turn it into a playbook. <a href="#cheatsheets" data-tab="cheatsheets">→ The 3-step method</a></li>
+      <li><strong>Set up one Custom GPT, Gem, or Claude Skill</strong> for a task you do every week.</li>
+      <li><strong>Build a Reply Library</strong> for the messages you keep rewriting.</li>
+      <li><strong>Run one weekly cadence:</strong> Monday brain-dump, mid-week new tool, Friday review.</li>
+    </ol>
+  </section>
+
+  <section id="curriculum" class="tab">
+    <h2>Curriculum: the 14-day course</h2>
+    <p class="lede">A linear path. Start at day one. Move at your pace — one day, one weekend, or one focused sprint. Each module pulls from the actual content of the club, sequenced so each piece sets up the next.</p>
+
+    <div class="progress-card">
+      <div class="progress-head">
+        <div>
+          <h4>Your progress</h4>
+          <p id="progress-text">0 of 64 lessons complete</p>
+        </div>
+        <button id="reset-progress" type="button">Reset</button>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <nav class="month-jump" aria-label="Jump to day">
+      <a href="#m01">01</a>
+      <a href="#m02">02</a>
+      <a href="#m03">03</a>
+      <a href="#m04">04</a>
+      <a href="#m05">05</a>
+      <a href="#m06">06</a>
+      <a href="#m07">07</a>
+      <a href="#m08">08</a>
+      <a href="#m09">09</a>
+      <a href="#m10">10</a>
+      <a href="#m11">11</a>
+      <a href="#m12">12</a>
+      <a href="#m13">13</a>
+      <a href="#m14">14</a>
+    </nav>
+
+    <div class="module" id="m01">
+      <div class="module-header">
+        <span class="month">Day 01</span>
+        <h3>Get fluent. Stop fearing the blank chat box.</h3>
+      </div>
+      <p class="module-intro">You learn what AI actually is, how the four big tools differ, and the single most important skill: writing a clear prompt. By the end of today, you can sit down at a blank chat box and not flinch.</p>
+
+      <article class="lesson">
+        <h4>Lesson 1.1 — Getting Started With ChatGPT (Even If You've Tried It Before)</h4>
+        <p>Most people who say "I've tried ChatGPT" tried the free version, asked it three things, didn't get magic, and walked away. That's a fair reaction to a bad first date. The actual product, used well, is something else.</p>
+        <p>The first move is to ignore the model picker. The defaults are fine. Pick one model, stop tab-switching. The second move is to stop asking AI to "help with" things. Ask for a deliverable. "Help me with my LinkedIn post" yields advice. "Write a 150-word LinkedIn post about X for an audience of Y, in my voice (here's a sample), then suggest two alternate hooks" yields a draft.</p>
+        <p>The third move is to stay in the same chat for a single task. Don't open a new conversation every time. The chat is your context. When you walk away from it, you walk away from everything you taught it.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 1.2 — The 5-Block Prompt Framework</h4>
+        <p>This is the foundational skill. Every prompt has up to five blocks: <strong>Instruction</strong> (what to do), <strong>Context</strong> (background it needs), <strong>Format</strong> (how the answer should look), <strong>Tone</strong> (how it should sound), and <strong>Clarifying Questions</strong> (permission to ask before guessing). Use as many as the task needs. For a translation, just an instruction. For a client email, all five.</p>
+        <p>The block that does the most work for the least effort is the last one. Adding "If you need more information or clarification to do this well and help me reach my goal, ask me the questions you need before you answer" stops AI from guessing — which is where most bad answers come from.</p>
+        <div class="lesson-prompt">
+          <h5>The reusable template</h5>
+          <pre>Instruction: [What you want the AI to do.]
+Context: [Relevant background information.]
+Format: [How the output should be structured.]
+Tone: [Communication style if relevant.]
+Clarifying Questions: If you need more information or clarification to do this well and help me reach my goal, ask me the questions you need before you answer.</pre>
+        </div>
+        <p class="lesson-key"><strong>Why this matters:</strong> a vague prompt gets a vague answer, then you spend ten minutes correcting it. A clear prompt gets a usable answer the first time. The five blocks force you to be specific about what you want before you ask for it. The thinking is the work.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 1.3 — ChatGPT CheatSheet: All Features and Models Explained</h4>
+        <p>The interface has more in it than people realize. <strong>Memory</strong> stores what AI should remember about you across all chats (your role, your tone, your projects). <strong>Custom Instructions</strong> are your standing prompt — set once, applied to everything. <strong>Projects</strong> are scoped workspaces with their own memory and files. <strong>Canvas</strong> is collaborative editing for long output. <strong>Tasks</strong> let you schedule prompts to run on a schedule.</p>
+        <p>Models: pick a default and stick with it. The reasoning models (o-series) are slower but better at multi-step problems. The fast models are better for chat. Switch only when you hit a wall, not as a habit.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 1.4 — Keep Your Data Private</h4>
+        <p>For both ChatGPT and Claude: turn off "training on my data" in settings. Don't paste anything you wouldn't paste into a Google Doc you might accidentally make public. Treat every chat like it could be read someday. Most of what you'll do is fine. Some things — client data, anything under NDA, anything regulated — needs the workspace/team plan or shouldn't go in at all.</p>
+        <p>The honest answer is that the privacy story is good now but evolving. Default to the conservative read.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day one:</strong> you can write a prompt that gets you 80% of the way without rewrites. You know which model to use and when. Your data settings are sane.</p>
+    </div>
+
+    <div class="module" id="m02">
+      <div class="module-header">
+        <span class="month">Day 02</span>
+        <h3>Set up your AI workspace.</h3>
+      </div>
+      <p class="module-intro">You stop typing the same instructions every time. You build the foundations that make every future chat faster. Today is the difference between using AI and operating on AI.</p>
+
+      <article class="lesson">
+        <h4>Lesson 2.1 — Understanding ChatGPT Projects</h4>
+        <p>A Project is not a folder. It's a scoped workspace with its own memory, its own files, and its own custom instructions. Every chat inside a Project inherits all of that. So if you set up a "Client X" Project with their brand voice document, their style guide, and instructions to write in their tone — every chat you start in that Project knows it without being told.</p>
+        <p>The right setup: one Project per ongoing context. A Project for your business. A Project for each major client. A Project called "Personal" for your life. Drop reference docs in. Add custom instructions that explain the role AI is playing in that Project. Now the work happens fast.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 2.2 — Custom GPTs: Build Your First One</h4>
+        <p>A Custom GPT is a prompt-plus-files-plus-personality wrapped into a button. You build it once, you click it forever. Where Projects are scoped contexts you live in, GPTs are tools you call. "LinkedIn Post Writer" is a GPT. "Receipt Categorizer" is a GPT. "Brutal First-Draft Editor" is a GPT.</p>
+        <p>The setup is three fields: <strong>Instructions</strong> (the system prompt — what role does this GPT play, what format, what to avoid), <strong>Knowledge</strong> (files it should always reference), and <strong>Conversation Starters</strong> (the prompts you click to begin). Build a GPT for any task you do more than three times.</p>
+        <div class="lesson-prompt">
+          <h5>Custom GPT instructions template</h5>
+          <pre>You are [role]. You help me [outcome] by [method].
+
+Always:
+- [non-negotiable 1]
+- [non-negotiable 2]
+
+Never:
+- [thing to avoid]
+
+Format your output as: [structure]
+Tone: [tone]
+
+If you need clarification before producing output, ask first.</pre>
+        </div>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 2.3 — Gemini Gems</h4>
+        <p>Gems are Google's version of Custom GPTs. Same idea, different ecosystem. The reason to care: Gemini is wired into Google Workspace. A Gem can pull from your Drive, Gmail, Calendar without you uploading anything. If you live in Workspace, that integration is the unlock.</p>
+        <p>Build the same Gem you'd build as a Custom GPT, then point it at your Drive folders. The "Reusable Newsletter Writer" Gem that has access to your Drive folder of past newsletters is qualitatively better than the GPT version.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 2.4 — Claude Skills</h4>
+        <p>The newest piece of the stack. A Skill is a folder of instructions and reference files that Claude loads when relevant. Where a GPT is a button you click, a Skill is a capability Claude reaches for automatically when the task fits.</p>
+        <p>The classic Skill: your voice. Drop in samples of your writing, instructions on tone, things to avoid. Now any time you ask Claude to write, it writes like you — without you having to remind it. Skills are also the right place to encode style guides, format conventions, brand rules, anything that should be on by default.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 2.5 — The Personalization Stack</h4>
+        <p>You now have four layers of personalization in ChatGPT alone: <strong>Memory</strong> (always-on, lightweight, stores facts about you), <strong>Custom Instructions</strong> (always-on, sets defaults), <strong>Projects</strong> (scoped, workspace-level), <strong>Custom GPTs</strong> (called explicitly, task-level). The mistake is dumping everything into Memory. The fix is layering: high-frequency facts in Memory, defaults in Custom Instructions, contexts in Projects, tools as GPTs.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day two:</strong> you have at least one Custom GPT, one Gem or Skill, and three Projects running. Setup happens once. Output happens fast.</p>
+    </div>
+
+    <div class="module" id="m03">
+      <div class="module-header">
+        <span class="month">Day 03</span>
+        <h3>Make AI write in your voice.</h3>
+      </div>
+      <p class="module-intro">Generic AI sounds like everyone else. That's why people clock AI-written content immediately — sentences too round, vocabulary too even, no edges. The fix is teaching it your edges once, not every time.</p>
+
+      <article class="lesson">
+        <h4>Lesson 3.1 — Format Information in Markdown</h4>
+        <p>This sounds technical. It isn't. Markdown is just a way of typing structure: <code># Heading</code>, <code>- bullet</code>, <code>**bold**</code>. AI parses Markdown dramatically better than prose. When you give it a long brief, format the brief in Markdown. Headers for sections. Bullets for lists. Bold for emphasis. AI reads the structure as structure, not as words to wade through.</p>
+        <p>The same applies in reverse: ask for output in Markdown. It's easier to scan, easier to paste into Notion or Docs, easier to reformat downstream.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 3.2 — Move Between Tools Without Losing Format</h4>
+        <p>The trick: ask for the response in Markdown, then paste it into a tool that renders Markdown (Notion, Obsidian, most modern editors). For Word and Google Docs, ask AI to "format this as the actual structured document" — it'll use real headings and lists instead of <code>**bold**</code> literals. For email, ask for "plain text, no Markdown formatting."</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 3.3 — Dean's Top 10 (Insanely Simple) Prompts He Uses Every Week</h4>
+        <p>The founder's actual workflow. The pattern across all ten is mundane: most weekly value comes from a small set of repeatable prompts. The categories: <strong>summarize</strong> (turn a long thing into a short thing), <strong>extract</strong> (pull specific items out of a longer thing), <strong>restructure</strong> (same content, different format), <strong>suggest</strong> (alternatives, options, next steps), <strong>critique</strong> (find what's weak before someone else does).</p>
+        <div class="lesson-prompt">
+          <h5>The five workhorses</h5>
+          <pre>1. "Summarize this in [N] bullets, focused on [angle]."
+2. "Extract every [item type] mentioned and put them in a table with [columns]."
+3. "Rewrite this as [format] for [audience]."
+4. "Give me three alternative [approaches/headlines/intros] in different tones."
+5. "Critique this. What's weak, what's confusing, what would a skeptic push back on?"</pre>
+        </div>
+        <p class="lesson-key"><strong>Why this matters:</strong> people overcomplicate prompts. The 80% of value comes from these five patterns applied to your actual work.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 3.4 — Voice Lock</h4>
+        <p>To make AI sound like you, give it three to five samples of your own writing and tell it what's distinctive: short sentences, specific words, the rhythm. Encode that in a Skill (Claude) or a Custom GPT (ChatGPT). From then on, when you ask for a draft, it comes back recognizable.</p>
+        <p>The voice-lock prompt: <em>"Here are three pieces I've written. Identify what's distinctive about my voice — sentence length, vocabulary, rhythm, the things I do that AI doesn't. Then write a 150-word version of [topic] in that voice."</em></p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day three:</strong> AI sounds like you, not like AI. Your reusable assistants have your voice baked in.</p>
+    </div>
+
+    <div class="module" id="m04">
+      <div class="module-header">
+        <span class="month">Day 04</span>
+        <h3>The Reusable Playbook system.</h3>
+      </div>
+      <p class="module-intro">This is the unlock. The moment you stop using AI like a one-off tool and start treating it like a system. Every other day builds on this one.</p>
+
+      <article class="lesson">
+        <h4>Lesson 4.1 — Turn a Chat Where You Nailed It Into a Reusable Playbook</h4>
+        <p>The problem: you spend an hour iterating with AI on a task, finally get it right, close the chat, and the next time the same task comes up, you start from scratch. Everything you taught it disappears. The fix is three steps.</p>
+        <p><strong>Step 1: Find a chat where you nailed it.</strong> A recurring task. A back-and-forth that ended in exactly the result you wanted. Stay in that same chat — don't open a new one. <strong>Step 2: Ask AI to extract the playbook.</strong> Use the prompt below. <strong>Step 3: Test it in a new chat.</strong> Open a fresh chat, paste the playbook, run the same task. If the result holds, you have a process. Better — wrap it in a Custom GPT, Gem, or Claude Skill.</p>
+        <div class="lesson-prompt">
+          <h5>The Playbook Extraction Prompt</h5>
+          <pre>Based on everything we did in this conversation, extract the full process that led to this final result and turn it into a detailed reusable playbook for this task.
+
+I want a structured playbook that captures how we moved from the initial idea or draft to the final result, including the key steps, adjustments, and decisions that improved the output along the way.
+
+Please include:
+- The type of task this playbook is for
+- The starting point (what we began with)
+- The final result we were aiming for
+- The step-by-step process we followed in the correct order
+- The key instructions, prompts, refinements, and adjustments made along the way
+- The tone, structure, format, or style decisions that improved the result
+- What did not work or what we changed during the process
+- What should stay consistent each time
+- What can be customized for each new version
+- A final reusable version of the playbook written clearly enough that I can paste it into a new chat or use it to build a custom AI assistant for this recurring task
+
+Important:
+- Do not summarize the conversation
+- Focus on the process that led to the final result
+- Keep the playbook clear, structured, and detailed
+- Make it practical and reusable for recurring tasks</pre>
+        </div>
+        <p class="lesson-key"><strong>Mistake to avoid:</strong> treating the playbook as written in stone. Refine it. Your standards evolve. The playbook should too.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 4.2 — From Playbook to Shareable SOP</h4>
+        <p>Once you have a playbook for yourself, the next move is making it run for someone else. Take the playbook, paste it into a fresh chat, and ask: "Rewrite this as a Standard Operating Procedure that someone with no context could follow. Add a 'Why this step matters' note for each step." You now have an SOP your team or a contractor can run.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 4.3 — The Handoff Prompt</h4>
+        <p>When a chat goes off the rails — context too long, model getting confused, you need to switch tools — don't start from scratch. Hand off. Ask AI to summarize the conversation as a handoff prompt: the goal, what's been decided, what's still open, the constraints, the next step. Paste it into a fresh chat. Continue from there.</p>
+        <div class="lesson-prompt">
+          <h5>The Handoff Prompt</h5>
+          <pre>Summarize this entire conversation as a handoff prompt I can paste into a fresh chat to continue from exactly where we are now.
+
+Include:
+- The goal we are working toward
+- What we have decided so far and why
+- What is still open
+- The constraints (audience, format, tone, deadlines)
+- The next concrete step
+
+Write it as a single block I can copy.</pre>
+        </div>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 4.4 — Let AI Write Your Prompt</h4>
+        <p>Stuck on how to ask? Describe the task in plain English and ask AI to write the prompt for you. <em>"I want to do X. Write me the best prompt to give to ChatGPT to accomplish this. Include all five blocks: instruction, context, format, tone, clarifying questions."</em> Most of the prompts you'll save and reuse forever started as AI-written.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day four:</strong> three of your weekly tasks live as reusable playbooks. Hours saved every week, compounding from here.</p>
+    </div>
+
+    <div class="module" id="m05">
+      <div class="module-header">
+        <span class="month">Day 05</span>
+        <h3>Content that sounds like you.</h3>
+      </div>
+      <p class="module-intro">Marketing-grade content without the marketing-grade time sink. By the end of today, you have a content engine, not a content panic.</p>
+
+      <article class="lesson">
+        <h4>Lesson 5.1 — From Rough Idea to Publish-Ready LinkedIn Post</h4>
+        <p>The pipeline has five stages: <strong>idea</strong> (a half-thought you'd normally lose), <strong>angle</strong> (the specific lens that makes it not generic), <strong>draft</strong> (in your voice, via your Custom GPT or Skill), <strong>polish</strong> (cut every sentence that doesn't earn its place), <strong>ship</strong> (with two alternate hooks for next time).</p>
+        <p>The voice piece is the hardest. Without it, every post sounds like every other LinkedIn post. With it, the post sounds like a thing only you would say. Lock voice with a Skill or GPT on day 3 — then today is mostly idea capture and angle.</p>
+        <div class="lesson-prompt">
+          <h5>The post pipeline prompt</h5>
+          <pre>Here's a rough idea: [your half-thought].
+
+Take it through five stages:
+1. Sharpen the angle — what's the specific lens that makes this not generic?
+2. Draft a 150-word LinkedIn post in my voice (refer to the voice samples).
+3. Self-critique: what's weak, what's filler, what would a skeptic push back on?
+4. Polished v2 incorporating the critique.
+5. Two alternate hooks I can A/B with.</pre>
+        </div>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 5.2 — From Blank Page to 7-Day Content Plan</h4>
+        <p>Sundays should not be content panic. Run one prompt that produces a Day × Topic × Hook × Angle × CTA table for the week. The variables you supply: your audience, your offers, your monthly theme. AI handles the variation across the week so each post hits a different angle.</p>
+        <div class="lesson-prompt">
+          <h5>7-day content plan prompt</h5>
+          <pre>Create a 7-day content calendar for [platform] for an audience of [audience].
+
+My monthly theme: [theme].
+My current offer: [offer or CTA goal].
+
+Format as a table with columns: Day, Topic, Hook, Post angle, CTA.
+Make sure the seven days vary in angle (story, framework, contrarian take, behind-the-scenes, lesson, list, question) so it doesn't feel repetitive.
+
+If you need clarification on my voice or offer details before drafting, ask first.</pre>
+        </div>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 5.3 — From Random Headlines to Clear Positioning</h4>
+        <p>Most LinkedIn feeds read as a stream of "thoughts." That doesn't position you. Positioning means people can finish the sentence "she's the person who ___." The exercise: list your last 30 posts, ask AI to identify the implicit positioning and the implicit audience. Most of the time, the answer is "your positioning is unclear." Then ask AI to draft three crisper positions and three weeks of content for each. Pick one. Commit.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 5.4 — Newsletters That People Actually Open</h4>
+        <p>The newsletter playbook is similar to the post pipeline but with structure. Every newsletter has the same sections (intro hook, main idea, one tactical thing, one thing to read/watch, sign-off). AI handles the variation inside the structure. Lock the structure in a Custom GPT, run it weekly with new ideas as input.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 5.5 — Ads with ChatGPT + Canva</h4>
+        <p>Concept in ChatGPT (audience, offer, three angles, three hooks per angle, two visual concepts each), then Canva for the actual creative. The pattern: AI for concept and copy, Canva for execution. Stop trying to make AI tools do design. Stop trying to make design tools do strategy.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day five:</strong> you have a content engine. Mondays are about ideas, not panic.</p>
+    </div>
+
+    <div class="module" id="m06">
+      <div class="module-header">
+        <span class="month">Day 06</span>
+        <h3>Visuals: from concept to publish.</h3>
+      </div>
+      <p class="module-intro">You stop apologizing for stock photos. You stop hiring out for things that take 10 minutes now.</p>
+
+      <article class="lesson">
+        <h4>Lesson 6.1 — Free, Fast Image Gen with Nano Banana (Gemini)</h4>
+        <p>Gemini's image model is free and surprisingly good, especially for edits. The killer feature is consistency: you can generate a character, then ask for "the same character in a different setting" and actually get the same character. Use it for hero images, blog illustrations, social tiles, on-brand mockups.</p>
+        <p>The prompt formula: <em>subject + style + setting + mood + technical (lighting, composition, aspect ratio)</em>. Be specific. "A woman" gets you anyone. "A 40-year-old Filipino-American woman in a navy blazer, mid-laugh, golden hour kitchen, shallow depth of field, 16:9" gets you what you wanted.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 6.2 — Professional Headshot for Free</h4>
+        <p>Upload a clear photo of your face, ask Gemini for "a professional LinkedIn-style headshot" with specifics: lighting, background, attire. Iterate. Three rounds of edits gets you to publishable. The trick: include "preserve facial features exactly" in the prompt or you'll get a different person back.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 6.3 — Restyle Product Images</h4>
+        <p>For product shots that need to look premium without a photographer: upload the existing image, ask for a specific premium aesthetic ("editorial fashion catalog, soft natural light, marble surface, minimal styling"), keep the product unchanged. This is the reason small-business product photos no longer have to look like Etsy listings.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 6.4 — Stories and Reels in Canva AI</h4>
+        <p>Templates as scaffolds. You don't design from scratch — you customize a template that's already 80% there. Canva's AI does the heavy lifting on copy, layout, and on-brand color/font matching. Best for high-volume social where you'd otherwise burn hours.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 6.5 — On-Brand Asset Generation with Pomelli</h4>
+        <p>Pomelli is Google Labs' brand-aware generator. You feed it your brand kit (colors, fonts, logo, voice), it generates assets that respect those rules. Best for marketing teams who need consistency at volume. Different from Canva: Canva is template-driven, Pomelli is brand-driven.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day six:</strong> every post you publish has a visual you actually like, made in minutes, not hours.</p>
+    </div>
+
+    <div class="module" id="m07">
+      <div class="module-header">
+        <span class="month">Day 07</span>
+        <h3>Video and audio without a studio.</h3>
+      </div>
+      <p class="module-intro">The studio fits in a tab now. The bar for shipping audio and video has dropped through the floor.</p>
+
+      <article class="lesson">
+        <h4>Lesson 7.1 — Script to Short-Form Video with Pictory</h4>
+        <p>Pictory takes a script and turns it into a branded short-form video with stock B-roll, captions, and voiceover. No camera, no editing software. The workflow: write the script in ChatGPT, paste into Pictory, pick a brand kit, ship. Best for content where your face isn't the point.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 7.2 — Voiceovers with ElevenLabs (v3)</h4>
+        <p>ElevenLabs v3 has true emotional inflection. Not "robot reading text" but "actor reading text." You can clone your own voice in five minutes (record a few minutes of clean audio, upload). Then any text you write becomes you reading it — in any of 30+ languages.</p>
+        <p>Practical use: voiceovers for short videos, podcast intros when you don't want to re-record, multilingual versions of your existing content. The ethical line: be transparent that it's a clone if you're using it externally.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 7.3 — AI Avatar with HeyGen + ElevenLabs</h4>
+        <p>HeyGen creates a video avatar of you (or of a stock person) speaking your script. Pair with your ElevenLabs voice clone and you have a scalable spokesperson — same voice, same face, infinite content. Best for course videos, FAQ videos, social explainers where you'd otherwise have to record.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 7.4 — Stop Re-Recording. Get AI Feedback.</h4>
+        <p>The trap: you record a take, hate it, re-record, hate that one too, three hours gone. Instead: record once, get a transcript, paste it to AI with "give me feedback on clarity, pacing, hooks, and structure. Tell me what to cut and what to add. Then suggest three opening lines that would make me click." Re-record from the feedback. Or, often, don't re-record at all and just edit.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 7.5 — The Current Tool Landscape</h4>
+        <p>Top of mind right now: <strong>Veo 3</strong> (Google) and <strong>Adobe Firefly</strong> for video generation; <strong>HeyGen</strong> for avatars; <strong>Pictory</strong> for B-roll style; <strong>ElevenLabs</strong> for voice; <strong>Adobe Podcast</strong> and <strong>Suno</strong> for audio cleanup and music. Don't try to learn all of them. Pick the one that matches the kind of content you ship most. Master that one.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day seven:</strong> you ship video and audio without rebooking your week.</p>
+    </div>
+
+    <div class="module" id="m08">
+      <div class="module-header">
+        <span class="month">Day 08</span>
+        <h3>Research like a pro.</h3>
+      </div>
+      <p class="module-intro">You stop wasting hours on Google. You start triaging more information in less time, with better signal.</p>
+
+      <article class="lesson">
+        <h4>Lesson 8.1 — Perplexity: Sourced Search</h4>
+        <p>Perplexity is what you reach for when you need facts with citations. Every claim is sourced. Use it when you'd otherwise be checking three Wikipedia tabs and an industry report. Pro mode picks the right model and search depth for the question. Pages turn a research session into a shareable write-up.</p>
+        <p>The when-to-use: factual questions, market research, competitive analysis, anything where the source matters.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 8.2 — ChatGPT Deep Research</h4>
+        <p>Different beast. Deep Research takes 5 to 30 minutes, browses dozens of sources, returns a structured report with citations. Use for market sizing, big-decision research, anything you'd previously have hired a consultant for. The cost is time, not money. Don't run it for quick lookups.</p>
+        <p>The framing matters. A vague research question gets a vague report. A specific question — "What are the three most successful coaching businesses serving Filipino-American women founders, and what's their pricing/positioning?" — gets a report you can use.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 8.3 — NotebookLM: Pin a Corpus, Query Anything</h4>
+        <p>NotebookLM is the move when you have a body of content (PDFs, transcripts, web pages, your own notes) and want to ask questions against it. Upload up to 50 sources. Ask. Every answer cites the source. It does not hallucinate outside your corpus.</p>
+        <p>The killer feature is the audio overview — it generates a 10-minute "podcast" between two AI hosts discussing your sources. Listen on a walk. You retain more than from reading. Useful for long industry reports, your own back-catalog of writing, customer interview transcripts, books you don't have time to read cover to cover.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 8.4 — Daily Brief via ChatGPT Tasks</h4>
+        <p>Tasks lets you schedule prompts to run on a schedule. The classic setup: every weekday at 7am, run "Search for the top 3 stories in [your industry] from the last 24 hours. For each, give me a 50-word summary, why it matters to me, and what I might do about it. Format as a single email-ready brief." It runs while you sleep. You wake up to your brief.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day eight:</strong> you triage 10x more information in less time, with better signal.</p>
+    </div>
+
+    <div class="module" id="m09">
+      <div class="module-header">
+        <span class="month">Day 09</span>
+        <h3>Sales and outbound that doesn't feel gross.</h3>
+      </div>
+      <p class="module-intro">Cold messages that earn replies. Conversations that turn into clients. Without the sleaze.</p>
+
+      <article class="lesson">
+        <h4>Lesson 9.1 — Cold Messages That Land</h4>
+        <p>The structure: <strong>Open</strong> (specific, not flattering, show you actually looked), <strong>Context</strong> (why now, why them, why you), <strong>Ask</strong> (one specific, low-friction yes). The mistake people make is leading with themselves. The fix is leading with what you noticed about the recipient.</p>
+        <div class="lesson-prompt">
+          <h5>Cold message prompt</h5>
+          <pre>Write three cold message variants to [name/role] at [company].
+
+What I noticed about them: [specific thing — recent post, change at company, mutual connection, work I admire].
+What I do: [one-line offer].
+The ask: [low-friction next step — 15-min call, opinion on X, intro to Y].
+
+Variants:
+1. Warm and human (story-led)
+2. Direct and brief (under 50 words)
+3. Provocative (lead with a contrarian observation)
+
+Tone: confident, not desperate. Specific, not generic. Short.</pre>
+        </div>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 9.2 — The Reply Library</h4>
+        <p>The time-saver that compounds. List every recurring message you write — intros, follow-ups, scheduling, no-thank-yous, refund replies, hand-offs. For each, draft three versions: warm, neutral, firm. Save them in a Project (ChatGPT) or as a Skill (Claude). Tag by situation.</p>
+        <p>When a real message comes in, paste it in and ask AI to pick the right template and personalize. Replies stop feeling like ten decisions and start feeling like one.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 9.3 — Find Real Gaps in the Market</h4>
+        <p>Stop guessing what to offer. Run customer interview transcripts (or your own discovery call transcripts) through NotebookLM. Ask: "What problems come up repeatedly that no one is solving well? What language do people use to describe those problems? What have they already tried that didn't work?" The answers write your next offer.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 9.4 — Inbox Safety Filter</h4>
+        <p>Paste any suspicious email into AI with: "Is this a scam? Walk me through the signals — the red flags, the social engineering patterns, what they want me to do, and what I should do instead." Five seconds, peace of mind.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day nine:</strong> outbound is faster, sharper, more honest. Ironically, AI helps you sound more like yourself, not less.</p>
+    </div>
+
+    <div class="module" id="m10">
+      <div class="module-header">
+        <span class="month">Day 10</span>
+        <h3>Slides, docs, and deliverables.</h3>
+      </div>
+      <p class="module-intro">The boring stuff that ate your week. Handed off.</p>
+
+      <article class="lesson">
+        <h4>Lesson 10.1 — PowerPoint Faster with ChatGPT</h4>
+        <p>The pipeline: outline in ChatGPT (audience, goal, key sections, story arc), have it generate slide-by-slide content with speaker notes, export as PPTX, polish in PowerPoint. The trick is asking for "slide-by-slide markdown with title, bullets, and speaker notes per slide." That structure converts cleanly to slides.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 10.2 — Gamma AI: Generative Decks</h4>
+        <p>Different approach. Gamma takes a topic or outline and generates a full deck with modern aesthetics. Best for decks where design matters and you don't have a designer. Edit in-place. Export to PDF or PPTX. Best for pitch decks, internal proposals, thought leadership.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 10.3 — Landing Page in Replit (No Code)</h4>
+        <p>"Build me a landing page for [offer] with sections for [hero, value props, testimonials, CTA]. Use [color palette]. Mobile-responsive." Replit builds it. You iterate by chatting. Deploy to a live URL in minutes. The reason this is in the curriculum: a working landing page in 30 minutes beats a perfect plan for a designer in two weeks.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 10.4 — Boring Doc to Web Page People Read</h4>
+        <p>The ask: "Take this doc and turn it into a single-page website that's actually pleasant to read. Use clear sections, callouts for key points, real visual hierarchy. Output as HTML I can deploy." Now your one-page strategy doc is a URL you can share, and people will actually scroll it.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 10.5 — Universal Organizer Prompt</h4>
+        <p>For when you have a pile of stuff and don't know what to do with it: "Here's a dump of [notes/links/ideas/tasks]. Cluster them into themes. For each theme, identify the highest-leverage action. Format as a one-page focus map." Works on Sunday-night brain dumps, on quarterly reviews, on the loose ends after a busy week.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day ten:</strong> deliverables that used to take a day take an hour.</p>
+    </div>
+
+    <div class="module" id="m11">
+      <div class="module-header">
+        <span class="month">Day 11</span>
+        <h3>Operate like a system.</h3>
+      </div>
+      <p class="module-intro">From doing AI to running on AI. Automation that compounds.</p>
+
+      <article class="lesson">
+        <h4>Lesson 11.1 — Claude Cowork: Folder-Based Workflows</h4>
+        <p>This is the new operator pattern. Cowork talks to a folder on your computer. Drop in a folder of receipts, it builds the spreadsheet. Drop in a folder of meeting notes, it produces a summary doc. The receipts-to-spreadsheet workflow is the canonical example, but the pattern generalizes.</p>
+        <p>Why it matters: AI moves from "thing I chat with" to "thing that operates on my files." You stop copy-pasting. The work happens where your work already lives.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 11.2 — Claude AI vs. Cowork vs. Code</h4>
+        <p><strong>Claude AI</strong> (the chat product): for thinking, writing, analysis. <strong>Claude Cowork</strong>: for operating on local files and folders without code. <strong>Claude Code</strong>: for engineering work in a terminal or IDE. Pick the right surface for the job. Most people only need AI and Cowork.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 11.3 — A Team of Specialized Assistants</h4>
+        <p>One Project per role. "Editor" Project that critiques drafts. "Researcher" Project loaded with industry sources. "Strategist" Project loaded with your business context. Each has its own custom instructions, its own files, its own personality. You move work between them like you'd move it between team members.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 11.4 — The Current LLM Leaderboard</h4>
+        <p>State of play in 2026: <strong>Claude</strong> wins on long-form writing and careful reasoning. <strong>ChatGPT</strong> wins on ecosystem (Projects, GPTs, Memory, Tasks, Canvas, Code Interpreter). <strong>Gemini</strong> wins on Workspace integration and free image gen. <strong>Perplexity</strong> wins on sourced research. They're all good now. Pick based on workflow fit, not benchmarks.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day eleven:</strong> you have at least one workflow that runs without you typing.</p>
+    </div>
+
+    <div class="module" id="m12">
+      <div class="module-header">
+        <span class="month">Day 12</span>
+        <h3>Think clearer. Lead clearer.</h3>
+      </div>
+      <p class="module-intro">The non-obvious uses. AI as a thinking partner, not just a doer.</p>
+
+      <article class="lesson">
+        <h4>Lesson 12.1 — Associative Thinking with AI</h4>
+        <p>The exercise: "Take this idea: [X]. Force five lateral connections to fields you'd never expect — biology, music, urban planning, sports, ancient history. For each, identify the move from that field that I could steal." Generates novelty under pressure. Best for stuck on positioning, stuck on naming, stuck on a structural problem.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 12.2 — The Think-It-Through Framework</h4>
+        <p>For decisions: "I'm trying to decide between A and B. Steelman both. Then play devil's advocate against my likely choice. Then identify the second-order effects I'm not seeing. Then summarize what a wise advisor would tell me." The point isn't that AI decides. The point is that AI surfaces the considerations you'd otherwise skip.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 12.3 — AI as Memory Investigator</h4>
+        <p>"There's a thing — I think it was a book or framework — that talks about [vague description]. Help me figure out what it was." For the moments your brain blanks. Surprisingly effective for finding half-remembered references.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 12.4 — The 10-Minute Brain Dump</h4>
+        <p>Open a chat. Type for 10 minutes — every loose thread, every worry, every half-idea. Then: "Cluster everything I just said. Identify the three biggest themes. For each, give me the highest-leverage next action and the one thing I'm avoiding." Walk away with a one-page focus map. Use Mondays.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 12.5 — Capture Without Losing</h4>
+        <p>Voice notes anywhere (phone, walk, drive). Pipe them into AI weekly with: "Here are my voice notes from this week. Cluster them. Identify recurring themes. Surface anything that sounds like a decision I made or an idea I want to build on. Format as: themes, actions, ideas-to-revisit." Capture without losing.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day twelve:</strong> AI is part of how you think, not just how you produce.</p>
+    </div>
+
+    <div class="module" id="m13">
+      <div class="module-header">
+        <span class="month">Day 13</span>
+        <h3>Mindset for the long game.</h3>
+      </div>
+      <p class="module-intro">The expert series. The framing that holds the whole stack together. These aren't tutorials. They're the disposition shifts that keep you sane while everything moves fast.</p>
+
+      <article class="lesson">
+        <h4>Lesson 13.1 — Marie Forleo: Clear the Noise, Free Your Genius</h4>
+        <p>The session is less about AI than about the conditions that make AI useful. Most people don't lack tools. They lack space. The premise: your best work needs uncluttered attention, and AI's promise is only redeemed when you reclaim attention rather than fill it with new busy.</p>
+        <p>Decide what gets your attention before AI gets to choose. Use AI to remove noise (inbox triage, summarization, prep), not to add it (endless brainstorm sessions that make you feel productive but produce nothing). The 80/20 of personal productivity is still mindset. No prompt fixes a calendar with no protected time.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 13.2 — Zack Kass: Optimism as a Strategy</h4>
+        <p>Former OpenAI head of go-to-market. The argument: pessimism feels smart, but it's a bad operating posture for a window of historic upside. Optimism is not naïve. It's a strategy.</p>
+        <p>Bet on abundance: assume the technology will keep getting better and cheaper, and plan accordingly. Identify your "irreplaceable layer" — the judgment, taste, and relationships that AI amplifies but doesn't substitute for. Optimism is a posture you choose, and it changes what you build, not just how you feel.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 13.3 — Amjad Masad: From Idea to Impact Without Code</h4>
+        <p>Replit's founder. The thesis: the bottleneck on building has collapsed. The new constraint is taste — knowing what's worth building.</p>
+        <p>Build the thing first. Don't pitch, don't plan, don't pre-design. Build a working version, then iterate. Treat ideas as software: versioned, deployed, replaced, not protected. The new ladder is "make → ship → learn." AI compresses the loop from weeks to hours.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 13.4 — Sabrina Ramonov: Stop Chasing Tools</h4>
+        <p>The most operationally useful session in the series. The frame: tools are a trap if they precede problems.</p>
+        <p>Start with the recurring task, not the tool. List every weekly task. Score by time-cost and frustration. Solve the top three. Map the human steps before the AI ones. If you can't describe what a person would do, AI can't do it either. Then wrap the workflow in a Custom GPT, Gem, Skill, or Project. Until it's wrapped, it's not a system.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 13.5 — Map Your Irreplaceable Strengths</h4>
+        <p>The exercise: list your top 10 wins of the past year. Have AI cluster them. For each cluster, ask: what specific judgment, taste, or relationship made this happen? Those are your irreplaceable strengths. Build everything else around them. Delegate the rest, to people, or to AI.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day thirteen:</strong> you have a relationship with AI that doesn't depend on the next model release.</p>
+    </div>
+
+    <div class="module" id="m14">
+      <div class="module-header">
+        <span class="month">Day 14</span>
+        <h3>Run your week.</h3>
+      </div>
+      <p class="module-intro">Make it stick. Build the cadences that turn AI from a project into a habit.</p>
+
+      <article class="lesson">
+        <h4>Lesson 14.1 — One-Habit New Year System</h4>
+        <p>Most resolutions fail because they're too big. The fix: pick one habit. Make it small enough to do on your worst day. Use AI to design the trigger, the action, and the reward. "I want to build [habit]. Help me design the smallest possible version that I could do in under 5 minutes on my worst day. Then design a trigger that will reliably remind me, and a reward that will reinforce it."</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 14.2 — Track Key Ideas in Long Conversations</h4>
+        <p>Long ChatGPT chats produce great ideas that get buried. The fix: at the end of every long session, ask "List every decision we made and every idea worth saving. Format as a clean memo with sections: Decisions, Ideas to Build On, Open Questions." Save the memo somewhere persistent. Now nothing important gets lost in scroll.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 14.3 — From Vague Intent to Clear Starting Point in 10 Minutes</h4>
+        <p>For when you know AI could help with X but you don't know how to start: "I want to use AI to help with [vague task]. Walk me through what would need to be true for AI to do this well, what context I'd need to provide, what tools fit best, and what the first 10 minutes of work would look like. Then ask me one clarifying question." Stops the procrastination spiral.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 14.4 — The Weekly Cadence</h4>
+        <p>The rhythm that holds: <strong>Monday</strong> — 10-minute brain dump, focus map for the week. <strong>Mid-week</strong> — try one new thing (a hack, a tool, a prompt). <strong>Friday</strong> — review what worked, what to put in the playbook library, what to delete. <strong>Sunday</strong> — content plan for the week, no panic. Build it as repeating calendar events. Don't trust yourself to remember.</p>
+      </article>
+
+      <article class="lesson">
+        <h4>Lesson 14.5 — Track Time Saved</h4>
+        <p>The thing nobody does, that proves the whole stack: at the end of every week, log "what AI saved me this week" — three things, with rough hours. After a month, you have evidence. After three months, you have an unanswerable case for keeping the habit. After a year, you can point to weeks of life back.</p>
+      </article>
+
+      <p class="takeaway"><strong>By end of day fourteen:</strong> AI is a habit, not a project. You don't think about it. You just operate this way now.</p>
+    </div>
+  </section>
+
+  <section id="knowledge" class="tab">
+    <h2>Knowledge Base</h2>
+    <p class="lede">Everything covered, organized by what you'd actually search for.</p>
+
+    <div class="kb-filter">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="foundations">Foundations</button>
+      <button class="filter-btn" data-filter="workflow">Workflow &amp; Productivity</button>
+      <button class="filter-btn" data-filter="content">Content &amp; Marketing</button>
+      <button class="filter-btn" data-filter="research">Research &amp; Thinking</button>
+      <button class="filter-btn" data-filter="visuals">Visuals, Video &amp; Audio</button>
+      <button class="filter-btn" data-filter="ops">Ops &amp; Automation</button>
+      <button class="filter-btn" data-filter="mindset">Mindset</button>
+    </div>
+
+    <div class="kb-grid" id="kb-grid">
+      <!-- populated by JS -->
+    </div>
+  </section>
+
+  <section id="cheatsheets" class="tab">
+    <h2>Cheat Sheets</h2>
+    <p class="lede">The frameworks distilled. Copy. Paste. Use today.</p>
+
+    <article class="cheat">
+      <h3>The 5-Block Prompt Template</h3>
+      <p class="cheat-sub">The single most reused thing in the club. Works in ChatGPT, Claude, Gemini, anywhere.</p>
+      <div class="prompt-block">
+<pre>Instruction: [What you want the AI to do.]
+Context: [Relevant background information.]
+Format: [How the output should be structured.]
+Tone: [Communication style if relevant.]
+Clarifying Questions: If you need more information or clarification to do this well and help me reach my goal, ask me the questions you need before you answer.</pre>
+        <button class="copy-btn" data-copy="prompt-1">Copy</button>
+      </div>
+      <div class="cheat-notes">
+        <p><strong>Why it works:</strong> a vague prompt gets a vague answer. The five blocks force you to be specific about <em>what</em>, <em>why</em>, <em>how it should look</em>, <em>how it should sound</em>, and gives the AI permission to ask before it guesses.</p>
+        <p><strong>Worked example — handling a price increase:</strong></p>
+        <pre>Instruction: Draft an email response to a client who is unhappy about a price increase for my consulting services.
+Context: I am a solo consultant and raised my rates by 20% starting next month. This client has been with me for two years at the old rate. I want to keep them as a client but cannot continue offering the old price. As a gesture of goodwill, I'm offering them the previous rate for one more month.
+Format: Professional email with a clear subject line.
+Tone: Warm and appreciative, but firm about the value of the services.
+Clarifying Questions: Ask me if you need details about the specific services or the new pricing structure before writing the email.</pre>
+      </div>
+    </article>
+
+    <article class="cheat">
+      <h3>The Reusable Playbook (3 steps)</h3>
+      <p class="cheat-sub">Stop losing the chat where you nailed it. Turn it into a process you can run again in seconds.</p>
+      <ol class="big-steps">
+        <li>
+          <h4>Find a chat where you nailed it.</h4>
+          <p>A task you do regularly. A back-and-forth that ended in exactly the result you wanted. Stay in that same chat.</p>
+        </li>
+        <li>
+          <h4>Ask AI to extract the playbook.</h4>
+          <p>Paste this prompt:</p>
+          <div class="prompt-block">
+<pre>Based on everything we did in this conversation, extract the full process that led to this final result and turn it into a detailed reusable playbook for this task.
+
+I want a structured playbook that captures how we moved from the initial idea or draft to the final result, including the key steps, adjustments, and decisions that improved the output along the way.
+
+Please include:
+- The type of task this playbook is for
+- The starting point (what we began with)
+- The final result we were aiming for
+- The step-by-step process we followed in the correct order
+- The key instructions, prompts, refinements, and adjustments made along the way
+- The tone, structure, format, or style decisions that improved the result
+- What did not work or what we changed during the process
+- What should stay consistent each time
+- What can be customized for each new version
+- A final reusable version of the playbook written clearly enough that I can paste it into a new chat or use it to build a custom AI assistant for this recurring task
+
+Important:
+- Do not summarize the conversation
+- Focus on the process that led to the final result
+- Keep the playbook clear, structured, and detailed
+- Make it practical and reusable for recurring tasks</pre>
+            <button class="copy-btn" data-copy="prompt-2">Copy</button>
+          </div>
+        </li>
+        <li>
+          <h4>Test it in a new chat.</h4>
+          <p>Open a fresh chat. Paste the playbook (or upload it as a doc). Run the same task. If the result holds, you have a process. Save it. Better — turn it into a Custom GPT, a Gem, or a Claude Skill.</p>
+        </li>
+      </ol>
+      <p class="cheat-mistake"><strong>Mistake to avoid:</strong> treating the playbook as written in stone. Refine it. Your standards evolve. The playbook should too.</p>
+    </article>
+
+    <article class="cheat">
+      <h3>The Problem-First AI System</h3>
+      <p class="cheat-sub">From Sabrina Ramonov's expert session. The framework for not losing your mind every time a new tool drops.</p>
+      <div class="problem-first">
+        <div class="step"><span class="num">1</span><div><h4>Name the recurring problem.</h4><p>"I waste an hour every Monday writing the same client update." Specific. Recurring. Painful.</p></div></div>
+        <div class="step"><span class="num">2</span><div><h4>Define the win.</h4><p>What does "solved" look like? Time saved? Quality lifted? Consistency?</p></div></div>
+        <div class="step"><span class="num">3</span><div><h4>Map the steps a human would take.</h4><p>Not the AI. A human. This is the playbook draft.</p></div></div>
+        <div class="step"><span class="num">4</span><div><h4>Pick the tool that fits the steps.</h4><p>ChatGPT for chat-style ops. Claude for long-form, careful writing. Gemini for things that hook into Google Workspace. Replit for when "build me a web page" is faster than "find me a tool."</p></div></div>
+        <div class="step"><span class="num">5</span><div><h4>Wrap it in a reusable shell.</h4><p>Custom GPT, Gem, Skill, or Project. Stop typing setup every time.</p></div></div>
+      </div>
+    </article>
+
+    <article class="cheat">
+      <h3>The Reply Library</h3>
+      <p class="cheat-sub">Stop rewriting the same message. Build a vault.</p>
+      <ol class="numbered">
+        <li>List every message you find yourself rewriting (intro DMs, follow-ups, no-thank-yous, hand-offs, refund replies, scheduling).</li>
+        <li>For each, draft three versions: warm, neutral, firm.</li>
+        <li>Save them in a Project (ChatGPT) or as a Skill (Claude). Tag by situation.</li>
+        <li>When a real message comes in, paste it in and ask AI to pick the right template and personalize it.</li>
+      </ol>
+      <p class="cheat-mistake"><strong>The point:</strong> mental energy is the bottleneck, not typing speed. Replies should feel like one decision, not ten.</p>
+    </article>
+
+    <article class="cheat">
+      <h3>The Handoff Prompt</h3>
+      <p class="cheat-sub">When a chat goes off the rails, don't start over. Hand off.</p>
+      <div class="prompt-block">
+<pre>Summarize this entire conversation as a handoff prompt I can paste into a fresh chat to continue from exactly where we are now.
+
+Include:
+- The goal we are working toward
+- What we have decided so far and why
+- What is still open
+- The constraints (audience, format, tone, deadlines)
+- The next concrete step
+
+Write it as a single block I can copy.</pre>
+        <button class="copy-btn" data-copy="prompt-3">Copy</button>
+      </div>
+    </article>
+
+    <article class="cheat">
+      <h3>Tool stack by use case</h3>
+      <table class="stack-table">
+        <thead><tr><th>If you want to...</th><th>Reach for</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Write long-form, careful, in-your-voice content</td><td>Claude</td><td>Best at sustained writing. Skills make voice reusable.</td></tr>
+          <tr><td>Brainstorm fast, iterate, ship</td><td>ChatGPT</td><td>Best ecosystem: Projects, GPTs, Memory, Tasks, Canvas.</td></tr>
+          <tr><td>Search the live web with citations</td><td>Perplexity</td><td>Built for research, sources every claim.</td></tr>
+          <tr><td>Process long docs / podcasts</td><td>NotebookLM</td><td>Loads big docs. The audio overview is criminally underused.</td></tr>
+          <tr><td>Generate / edit images on the fly</td><td>Gemini Nano Banana</td><td>Free, fast, good at edits and consistent characters.</td></tr>
+          <tr><td>Create on-brand marketing assets</td><td>Pomelli (Google Labs) or Canva AI</td><td>Brand-aware generation.</td></tr>
+          <tr><td>Turn a script into video</td><td>Pictory or HeyGen</td><td>Pictory for B-roll style; HeyGen for an avatar.</td></tr>
+          <tr><td>Voiceovers</td><td>ElevenLabs v3</td><td>Emotional nuance, multilingual, your own voice clone.</td></tr>
+          <tr><td>Build a small web app or landing page</td><td>Replit (no-code)</td><td>"Build me X" → working app. Fastest path from idea to URL.</td></tr>
+          <tr><td>Make a deck</td><td>Gamma AI or ChatGPT → PPTX</td><td>Gamma for clean, modern. ChatGPT pipeline for branded.</td></tr>
+          <tr><td>Run a folder-based workflow on your computer</td><td>Claude Cowork</td><td>Talks to your files. Receipts → spreadsheet. Real operator pattern.</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <article class="cheat">
+      <h3>The structures the club uses, again and again</h3>
+      <ul class="bare">
+        <li><strong>Problem → Hack → Action.</strong> Every Hack of the Week. Useful for your own writing too.</li>
+        <li><strong>Before AI / After AI.</strong> The contrast that sells the change. Use it in case studies.</li>
+        <li><strong>Three-step methods.</strong> If you can't compress it to three, you don't understand it yet.</li>
+        <li><strong>Mistake to avoid.</strong> Always end with the trap. Saves people from themselves.</li>
+        <li><strong>The 7-day content plan.</strong> Days × hooks × angles × CTAs in a single table.</li>
+      </ul>
+    </article>
+  </section>
+
+  <section id="tools" class="tab">
+    <h2>Tool Stack</h2>
+    <p class="lede">The tools that came up across the 14 months. What they're for. When they earn their place.</p>
+    <div class="tool-grid" id="tool-grid"></div>
+  </section>
+
+  <section id="experts" class="tab">
+    <h2>Expert Series</h2>
+    <p class="lede">Five guest sessions that shaped how the club thinks. The takeaways from each.</p>
+
+    <article class="expert">
+      <h3>Marie Forleo — Clear the Noise, Free Your Genius</h3>
+      <p>The session is less about AI than about the conditions that make AI useful. Most people don't lack tools; they lack space. The premise: your best work needs uncluttered attention, and AI's promise is only redeemed when you reclaim that attention rather than fill it with new busy.</p>
+      <ul>
+        <li><strong>Decide what gets your attention before AI gets to choose.</strong> If your input is reactive, your output will be too.</li>
+        <li><strong>Use AI to remove noise, not add it.</strong> Inbox triage, summarization, prep — these earn their keep. Endless brainstorm sessions usually don't.</li>
+        <li><strong>The 80/20 of personal productivity is still mindset.</strong> No prompt fixes a calendar that has no protected time.</li>
+      </ul>
+    </article>
+
+    <article class="expert">
+      <h3>Zack Kass — Optimism as a Strategy</h3>
+      <p>Former OpenAI head of go-to-market. The argument: pessimism feels smart, but it's a bad operating posture for a window of historic upside. Optimism is not naïve; it's a strategy.</p>
+      <ul>
+        <li><strong>Bet on abundance.</strong> The teams who assume the technology will keep getting better and cheaper plan differently — and end up right.</li>
+        <li><strong>Identify your "irreplaceable layer."</strong> The judgment, taste, and relationships that AI amplifies but doesn't substitute for.</li>
+        <li><strong>Optimism is a posture you choose.</strong> It changes what you build, not just how you feel.</li>
+      </ul>
+    </article>
+
+    <article class="expert">
+      <h3>Amjad Masad — From Idea to Impact Without Writing a Line of Code</h3>
+      <p>Replit's founder. The thesis: the bottleneck on building has collapsed. The new constraint is taste — knowing what's worth building.</p>
+      <ul>
+        <li><strong>Build the thing first.</strong> Don't pitch, don't plan, don't pre-design. Build a working version, then iterate.</li>
+        <li><strong>Treat ideas as software.</strong> Versioned, deployed, replaced. Not protected.</li>
+        <li><strong>The new ladder is "make → ship → learn."</strong> AI compresses the loop from weeks to hours.</li>
+      </ul>
+    </article>
+
+    <article class="expert">
+      <h3>Sabrina Ramonov — Stop Chasing Tools: Build a Problem-First AI System</h3>
+      <p>The most operationally useful session in the series. The frame: tools are a trap if they precede problems.</p>
+      <ul>
+        <li><strong>Start with the recurring task, not the tool.</strong> List every weekly task. Score by time-cost and frustration. Solve the top three.</li>
+        <li><strong>Map the human steps before the AI ones.</strong> If you can't describe what a person would do, AI can't do it either.</li>
+        <li><strong>Wrap the workflow.</strong> Custom GPT, Gem, Skill, Project. Until it's wrapped, it's not a system.</li>
+      </ul>
+    </article>
+
+    <article class="expert">
+      <h3>From Feeling Replaceable to Uniquely Valuable</h3>
+      <p>A workshop, not a guest interview, but anchors the same theme as Zack Kass's session. The exercise: use AI to map your irreplaceable strengths so you can build your work around them, not against them.</p>
+      <ul>
+        <li>List your top 10 wins of the past year. Have AI cluster them.</li>
+        <li>For each cluster, ask: what specific judgment, taste, or relationship made this happen?</li>
+        <li>Those are your irreplaceable strengths. Build everything else around them. Delegate the rest — to people, or to AI.</li>
+      </ul>
+    </article>
+  </section>
+</main>
+
+<footer>
+  <p>Built for Anna. Last updated <span id="today"></span>.</p>
+  <p class="footnote">Drawn from 14 months of AI Advantage Club content. This is a personal study aid, not affiliated with AI Advantage.</p>
+</footer>
+
+<script>
+// All content from 14 months of AI Advantage Club, organized.
+
+const KB_ITEMS = [
+  // FOUNDATIONS
+  { cat: "foundations", tag: "Foundations", title: "The 5-Block Prompt Framework", summary: "Instruction, Context, Format, Tone, Clarifying Questions. The single most reused skill. Stops the rewrite-correct-retry loop." },
+  { cat: "foundations", tag: "Foundations", title: "Getting Started With ChatGPT (Even If You've Tried It Before)", summary: "What the interface actually does, model picker decoded, what to ignore. The honest re-introduction." },
+  { cat: "foundations", tag: "Foundations", title: "ChatGPT CheatSheet: All Features and Models Explained", summary: "When to use which model, what Canvas is for, when to enable web, when to use Tasks, what Memory does." },
+  { cat: "foundations", tag: "Foundations", title: "How to Keep Your Data as Private as Possible in ChatGPT", summary: "Settings to flip, training opt-outs, what counts as sensitive, sharing implications." },
+  { cat: "foundations", tag: "Foundations", title: "How to Use Claude Safely and Stay in Control of Your Data", summary: "Same idea, Claude flavor. Workspace settings, retention, what the API vs. consumer plans do differently." },
+  { cat: "foundations", tag: "Foundations", title: "Markdown: How to Format Your Information So AI Understands It Clearly", summary: "Headers, lists, code fences. The format AI parses better than prose. Speeds up everything." },
+
+  // WORKFLOW
+  { cat: "workflow", tag: "Workflow", title: "Turn that AI Chat Where You Nailed It Into a Reusable Playbook", summary: "Three steps: find the chat, extract the playbook, test in a fresh chat. Stop rebuilding what worked." },
+  { cat: "workflow", tag: "Workflow", title: "Turn Any Repeated Process Into a Shareable SOP in Minutes", summary: "From your own workflow to a doc your team can run. AI does the writing." },
+  { cat: "workflow", tag: "Workflow", title: "From a Dead-End AI Chat to a Perfect Handoff Prompt in 60 Seconds", summary: "When a chat goes off the rails, hand it off. The prompt that summarizes context for the next chat." },
+  { cat: "workflow", tag: "Workflow", title: "From Trial-and-Error Prompting to an AI-Written Prompt That Works", summary: "Let AI write your prompts. Meta-prompting for the rest of us." },
+  { cat: "workflow", tag: "Workflow", title: "Custom GPTs: Everything You Need to Know (and How to Build Your First One)", summary: "From the chat to a permanent assistant. Setup, instructions, knowledge files, when to use vs. Projects." },
+  { cat: "workflow", tag: "Workflow", title: "Understanding ChatGPT Projects: How to Set Up a Workspace That Actually Works", summary: "Projects are not folders. They are scoped workspaces with shared memory, files, and instructions." },
+  { cat: "workflow", tag: "Workflow", title: "ChatGPT Projects: Build a Team of Specialized AI Assistants for Ongoing Work", summary: "One Project per role: writer, researcher, ops. Each with its own brief and files." },
+  { cat: "workflow", tag: "Workflow", title: "Build Reusable AI Assistants in Gemini with Gems", summary: "The Gemini equivalent of Custom GPTs. Workspace integration is the unique edge." },
+  { cat: "workflow", tag: "Workflow", title: "Claude Skills: Create a Reusable System So AI Always Writes in Your Style", summary: "The newest piece. Voice, tone, formats — encoded once, reused everywhere." },
+  { cat: "workflow", tag: "Workflow", title: "Get Custom Answers Using ChatGPT's Memories, Projects, Custom Instructions and GPTs", summary: "The full personalization stack. What goes in Memory vs. Custom Instructions vs. Project files vs. GPT knowledge." },
+  { cat: "workflow", tag: "Workflow", title: "Stop Rewriting the Same Messages: Build a Reply Library That Saves Time and Mental Energy", summary: "Three tones × every recurring message. Reply Library lives in a Project or Skill." },
+  { cat: "workflow", tag: "Workflow", title: "Keep Track of Key Ideas in Long ChatGPT Conversations", summary: "The note-taking layer for marathon chats. Don't let your best ideas scroll into oblivion." },
+  { cat: "workflow", tag: "Workflow", title: "How to Organize Anything Using ChatGPT", summary: "The universal organizer prompt. From notes to systems." },
+  { cat: "workflow", tag: "Workflow", title: "How to Copy AI Responses into Documents Without Format Loss", summary: "Preserve structure when moving from chat to Doc, Word, or Notion." },
+  { cat: "workflow", tag: "Workflow", title: "Dean's Top 10 (Insanely Simple) Prompts He Uses Every Week", summary: "The founder's actual workflow. Mostly variations on summarize, extract, restructure, suggest." },
+  { cat: "workflow", tag: "Workflow", title: "From News Overload to a 5-Minute Daily Brief: Automate Your News in ChatGPT using Tasks", summary: "Scheduled prompts that run while you sleep. Wake up to a daily brief in your inbox." },
+
+  // CONTENT
+  { cat: "content", tag: "Content & Marketing", title: "From a Rough Idea to a Publish-Ready LinkedIn Post That Sounds Like You", summary: "The five-stage post pipeline: idea → angle → draft → polish → ship. Voice locked via Claude Skill or GPT." },
+  { cat: "content", tag: "Content & Marketing", title: "From \"I Don't Know What to Post\" to a 7-Day Content Plan You'll Actually Execute", summary: "One prompt → a Day × Topic × Hook × Angle × CTA table. No more blank-page Sundays." },
+  { cat: "content", tag: "Content & Marketing", title: "From Random Headlines to Clear Positioning on LinkedIn", summary: "Stop posting 'thoughts.' Build a positioning thread that actually says what you do." },
+  { cat: "content", tag: "Content & Marketing", title: "How to Use AI to Create Engaging Newsletters", summary: "The newsletter playbook. Section structure, voice consistency, subject-line A/B." },
+  { cat: "content", tag: "Content & Marketing", title: "Create Your Own Ads Using ChatGPT + Canva", summary: "Concept → variants → creative. Without a designer in the loop." },
+  { cat: "content", tag: "Content & Marketing", title: "From Cold Messages to Conversations That Actually Lead to Clients", summary: "Cold outreach without the sleaze. Open → context → ask. Personalization that compounds." },
+  { cat: "content", tag: "Content & Marketing", title: "From Guessing Your Offers to Finding Real Gaps in the Market", summary: "Research the demand before you write the offer. Use NotebookLM + interview transcripts." },
+  { cat: "content", tag: "Content & Marketing", title: "Create Instagram Stories or Reels with Canva AI", summary: "Short-form social, fast. Templates as scaffolds." },
+  { cat: "content", tag: "Content & Marketing", title: "Restyle Your Product or Service Images Like Top Brands With ChatGPT", summary: "Make stock-quality product shots look premium. Style transfer prompts." },
+  { cat: "content", tag: "Content & Marketing", title: "Create On-Brand Marketing Assets in Minutes with Pomelli", summary: "Google Labs' brand-aware generator. Locks colors, fonts, voice." },
+
+  // RESEARCH
+  { cat: "research", tag: "Research & Thinking", title: "Perplexity AI Explained", summary: "What it is, how it works, when to use it over ChatGPT. Built for sourced research." },
+  { cat: "research", tag: "Research & Thinking", title: "From Chat to Deep Research: A Beginner's Guide to ChatGPT's Research Feature", summary: "When to invoke Deep Research. What it costs you (time, tokens). What you get back." },
+  { cat: "research", tag: "Research & Thinking", title: "NotebookLM Explained: What It Is, What It Can Do, and How It's Different", summary: "Pin a corpus, ask anything. The audio overview is the killer feature for processing long content." },
+  { cat: "research", tag: "Research & Thinking", title: "Turn Dense Content into Clear Strategic Direction (in Podcast Form)", summary: "NotebookLM podcast trick for long PDFs. Listen on a walk. Walk back with insights." },
+  { cat: "research", tag: "Research & Thinking", title: "Unlock Your Creativity Using AI-Powered Associative Thinking", summary: "Force lateral connections. The lateral move generator prompt." },
+  { cat: "research", tag: "Research & Thinking", title: "Think-It-Through Framework: Use AI to Form and Argue a Clearer Point of View", summary: "For decisions, positions, pitches. AI as Socratic foil, not yes-machine." },
+  { cat: "research", tag: "Research & Thinking", title: "From \"I Can't Remember\" to \"That's It\": Use AI as Your Memory Investigator", summary: "Describe the half-remembered thing. Let AI excavate." },
+  { cat: "research", tag: "Research & Thinking", title: "From Mental Overload to a One-Page Focus Map: A 10-Minute AI Brain Dump", summary: "Brain dump → cluster → prioritize → focus map. For Mondays where you can't think straight." },
+  { cat: "research", tag: "Research & Thinking", title: "From Scattered Notes to Clear Ideas: Capture Thoughts Anywhere Without Losing Them", summary: "Capture-first system. Process later. AI does the consolidation." },
+
+  // VISUALS
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "Create & Edit Images for Free with Simple Prompts Using Nano Banana", summary: "Gemini's image model. Free, fast, surprisingly good. Daily-driver for image gen and edits." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "How to Create a Professional Headshot for Free", summary: "Nano Banana / Gemini for headshots that don't look like AI slop." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "Top AI Image Tools of 2026", summary: "Midjourney vs. Gemini 2.5 vs. ChatGPT vs. specialty tools. Current state." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "Top AI Video Tools of 2026", summary: "Veo 3, Adobe Firefly, HeyGen. What each is actually for." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "Turn a Written Script into a Short-Form Video for Social Media (No Camera Required)", summary: "Script → Pictory → branded short-form. The no-face content engine." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "Let Your Avatar Handle Your Social Media — HeyGen + ElevenLabs", summary: "AI avatar + voice clone = scalable spokesperson content. The full pipeline." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "How to Create Emotionally Nuanced Voiceovers with ElevenLabs", summary: "v3 voices, emotional inflection, multilingual. Your voice clone, used properly." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "From Re-Recording in Circles to Publish-Ready Videos, Faster (With AI Feedback)", summary: "Stop re-recording. Get AI feedback on your first take. Rewrite, not re-shoot." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "Top AI Audio Tools of 2026", summary: "ElevenLabs, Adobe Podcast, Suno. Voice, cleanup, music. What's actually usable." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "Create Professional PowerPoint Presentations Faster with ChatGPT", summary: "From outline to PPTX. Branded. The decks-without-tears pipeline." },
+  { cat: "visuals", tag: "Visuals, Video & Audio", title: "Gamma AI: Interface Overview + Create Your First Presentation", summary: "The modern alternative. Generative slide decks with clean, modern aesthetics." },
+
+  // OPS
+  { cat: "ops", tag: "Ops & Automation", title: "Claude Cowork: Turn a Folder of Receipts into a Spreadsheet Automatically", summary: "The new operator pattern. Claude reads your folder, builds the sheet. Real automation, no glue code." },
+  { cat: "ops", tag: "Ops & Automation", title: "Claude AI, Cowork & Code: A Side-by-Side Comparison", summary: "When to use which. Cowork for files; Code for terminals; AI for chat." },
+  { cat: "ops", tag: "Ops & Automation", title: "Build a Professional Landing Page with Replit (No Code Required)", summary: "'Build me a landing page' → working URL. Iterate by chatting." },
+  { cat: "ops", tag: "Ops & Automation", title: "Top LLM Tools of 2026", summary: "Current model leaderboard. Where ChatGPT, Claude, Gemini sit. What's actually different." },
+  { cat: "ops", tag: "Ops & Automation", title: "Turn Boring Docs into Shareable Web Pages People Will Actually Read", summary: "From plain doc to gorgeous web page that gets shared." },
+  { cat: "ops", tag: "Ops & Automation", title: "Is This Email a Scam? A Simple AI Check to Keep You Safe", summary: "Inbox safety filter. Paste, ask, decide." },
+
+  // MINDSET
+  { cat: "mindset", tag: "Mindset", title: "Stop Chasing Tools: Build a Problem-First AI System — Sabrina Ramonov", summary: "Tools are a trap if they precede problems. Name the recurring task, then choose the tool." },
+  { cat: "mindset", tag: "Mindset", title: "Optimism as a Strategy — Zack Kass", summary: "Pessimism feels smart but builds nothing. Optimism is a posture you choose." },
+  { cat: "mindset", tag: "Mindset", title: "Clear the Noise, Free Your Genius — Marie Forleo", summary: "AI is only useful if it gives you back attention. Use it to remove noise, not add it." },
+  { cat: "mindset", tag: "Mindset", title: "From Idea to Impact Without Writing a Line of Code — Amjad Masad", summary: "The bottleneck on building has collapsed. The new constraint is taste." },
+  { cat: "mindset", tag: "Mindset", title: "From Feeling Replaceable to Uniquely Valuable", summary: "Use AI to map your irreplaceable strengths. Build everything around them." },
+  { cat: "mindset", tag: "Mindset", title: "From Broken Resolutions to Real Habits: The One-Habit New Year System Powered by AI", summary: "Habits that hold. Use AI to design the smallest possible recurring action." },
+  { cat: "mindset", tag: "Mindset", title: "From \"I Know AI Could Help\" to a Clear Starting Point in 10 Minutes", summary: "Entry-point prompt for any new task. Stops the 'I should use AI for this' procrastination spiral." },
+];
+
+const TOOLS = [
+  {
+    name: "ChatGPT",
+    tag: "Foundation",
+    purpose: "The Swiss army knife. Best ecosystem.",
+    notes: [
+      "Use Projects to scope context (files + instructions).",
+      "Custom GPTs for repeated personas/tasks shared with others.",
+      "Memory for personal context that should persist.",
+      "Tasks for scheduled prompts (daily brief).",
+      "Canvas for collaborative editing on long output.",
+    ],
+  },
+  {
+    name: "Claude",
+    tag: "Foundation",
+    purpose: "Sustained, thoughtful writing in your voice.",
+    notes: [
+      "Skills are the killer feature: voice, formats, frameworks reusable across chats.",
+      "Cowork: works on folders on your machine.",
+      "Code: for engineering work in terminal/IDE.",
+      "Best at long-form, careful reasoning.",
+    ],
+  },
+  {
+    name: "Gemini",
+    tag: "Foundation",
+    purpose: "Google Workspace integration + multimodal.",
+    notes: [
+      "Gems = Custom GPT equivalent.",
+      "Native Workspace tie-in (Docs, Sheets, Gmail).",
+      "Nano Banana for image gen/edit (free, fast).",
+    ],
+  },
+  {
+    name: "Perplexity",
+    tag: "Research",
+    purpose: "Live web research with citations.",
+    notes: [
+      "Source every claim — best for fact-finding.",
+      "Pro for deeper research with mode selection.",
+      "Pages feature for shareable research write-ups.",
+    ],
+  },
+  {
+    name: "NotebookLM",
+    tag: "Research",
+    purpose: "Pin a corpus, query against it.",
+    notes: [
+      "Loads PDFs, web pages, YouTube transcripts.",
+      "Audio overview turns docs into a podcast.",
+      "Best for long content you'll re-reference.",
+    ],
+  },
+  {
+    name: "Replit",
+    tag: "Build",
+    purpose: "Idea → working web app, no code.",
+    notes: [
+      "'Build me a landing page that…' → live URL.",
+      "Iterate by chatting. Deploy in clicks.",
+      "Honest cheapest path from concept to URL.",
+    ],
+  },
+  {
+    name: "Pictory",
+    tag: "Video",
+    purpose: "Script → branded short-form video.",
+    notes: [
+      "B-roll style. No face required.",
+      "Brand kit + voiceover + captions.",
+    ],
+  },
+  {
+    name: "HeyGen",
+    tag: "Video",
+    purpose: "AI avatar speaking your script.",
+    notes: [
+      "Pair with your ElevenLabs voice for a full clone.",
+      "Best for scalable spokesperson content.",
+    ],
+  },
+  {
+    name: "ElevenLabs",
+    tag: "Audio",
+    purpose: "Voice synthesis. Yours or licensed.",
+    notes: [
+      "v3 has true emotional inflection.",
+      "Multilingual without re-recording.",
+      "Voice clone takes minutes.",
+    ],
+  },
+  {
+    name: "Canva (AI)",
+    tag: "Design",
+    purpose: "Design with AI baked in.",
+    notes: [
+      "Magic Design from prompts.",
+      "Brand Kit locked in.",
+      "Fastest path for non-designers to ship.",
+    ],
+  },
+  {
+    name: "Pomelli",
+    tag: "Design",
+    purpose: "Brand-aware asset generation (Google Labs).",
+    notes: [
+      "Locks colors, fonts, voice.",
+      "Best for marketing teams who need consistency.",
+    ],
+  },
+  {
+    name: "Gamma",
+    tag: "Slides",
+    purpose: "Generative slide decks.",
+    notes: [
+      "From outline to deck in minutes.",
+      "Modern aesthetics out of the box.",
+      "Better than ChatGPT-to-PPTX if design matters.",
+    ],
+  },
+];
+
+</script>
+<script>
+// ===== Tabs =====
+const tabs = document.querySelectorAll(".tab");
+const navLinks = document.querySelectorAll(".topnav a, [data-tab]");
+
+function activateTab(name, opts) {
+  opts = opts || {};
+  tabs.forEach(function (t) { t.classList.toggle("active", t.id === name); });
+  document.querySelectorAll(".topnav a").forEach(function (a) {
+    a.classList.toggle("active", a.dataset.tab === name);
+  });
+  if (!opts.preserveScroll) window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+navLinks.forEach(function (link) {
+  link.addEventListener("click", function (e) {
+    var target = link.dataset.tab;
+    if (!target) return;
+    e.preventDefault();
+    activateTab(target);
+    history.replaceState(null, "", "#" + target);
+  });
+});
+
+// Initial routing
+var rawHash = (location.hash || "#home").slice(1);
+
+if (/^m\d{2}$/.test(rawHash)) {
+  activateTab("curriculum", { preserveScroll: true });
+  setTimeout(function () {
+    var el = document.getElementById(rawHash);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 50);
+} else if (rawHash.indexOf("/") !== -1) {
+  var parts = rawHash.split("/");
+  if (document.getElementById(parts[0])) {
+    activateTab(parts[0], { preserveScroll: true });
+  }
+} else if (document.getElementById(rawHash)) {
+  activateTab(rawHash);
+}
+
+// Month-jump anchors inside curriculum
+document.querySelectorAll(".month-jump a").forEach(function (a) {
+  a.addEventListener("click", function (e) {
+    e.preventDefault();
+    var id = a.getAttribute("href").slice(1);
+    activateTab("curriculum", { preserveScroll: true });
+    setTimeout(function () {
+      var el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        history.replaceState(null, "", "#" + id);
+      }
+    }, 20);
+  });
+});
+
+// ===== Utilities =====
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlight(text, term) {
+  var safe = escapeHtml(text);
+  if (!term) return safe;
+  var re = new RegExp("(" + escapeRegex(term) + ")", "ig");
+  return safe.replace(re, "<mark>$1</mark>");
+}
+
+// ===== Knowledge base render + filter =====
+var kbGrid = document.getElementById("kb-grid");
+
+function renderKB(filter, searchTerm) {
+  if (!kbGrid) return;
+  filter = filter || "all";
+  searchTerm = searchTerm || "";
+  var term = searchTerm.toLowerCase();
+  var items = KB_ITEMS
+    .filter(function (i) { return filter === "all" || i.cat === filter; })
+    .filter(function (i) {
+      return !term || (i.title.toLowerCase().indexOf(term) !== -1 || i.summary.toLowerCase().indexOf(term) !== -1);
+    });
+  if (items.length === 0) {
+    kbGrid.innerHTML = '<p class="kb-empty">No matches in the knowledge base' + (term ? ' for "' + escapeHtml(term) + '"' : '') + '.</p>';
+    return;
+  }
+  kbGrid.innerHTML = items.map(function (i) {
+    return '<div class="kb-card" data-cat="' + i.cat + '">' +
+      '<span class="kb-tag">' + escapeHtml(i.tag) + '</span>' +
+      '<h4>' + highlight(i.title, term) + '</h4>' +
+      '<p>' + highlight(i.summary, term) + '</p>' +
+      '</div>';
+  }).join("");
+}
+renderKB();
+
+document.querySelectorAll(".filter-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll(".filter-btn").forEach(function (b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    renderKB(btn.dataset.filter);
+  });
+});
+
+// ===== Tools render =====
+var toolGrid = document.getElementById("tool-grid");
+if (toolGrid) {
+  toolGrid.innerHTML = TOOLS.map(function (t) {
+    return '<div class="tool-card">' +
+      '<h4>' + escapeHtml(t.name) + ' <span class="tool-tag">' + escapeHtml(t.tag) + '</span></h4>' +
+      '<p class="tool-purpose">' + escapeHtml(t.purpose) + '</p>' +
+      '<ul>' + t.notes.map(function (n) { return '<li>' + escapeHtml(n) + '</li>'; }).join("") + '</ul>' +
+      '</div>';
+  }).join("");
+}
+
+// ===== Copy buttons =====
+function bindCopyButton(btn) {
+  btn.addEventListener("click", function () {
+    var pre = btn.parentElement.querySelector("pre");
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.textContent.trim()).then(function () {
+      var original = btn.textContent;
+      btn.textContent = "Copied";
+      btn.classList.add("copied");
+      setTimeout(function () {
+        btn.textContent = original;
+        btn.classList.remove("copied");
+      }, 1600);
+    }).catch(function () {
+      btn.textContent = "Copy failed";
+      setTimeout(function () { btn.textContent = "Copy"; }, 1600);
+    });
+  });
+}
+document.querySelectorAll(".copy-btn").forEach(bindCopyButton);
+
+// Auto-inject copy buttons in every curriculum lesson-prompt block
+document.querySelectorAll(".lesson-prompt").forEach(function (block) {
+  if (block.querySelector(".copy-btn")) return;
+  var btn = document.createElement("button");
+  btn.className = "copy-btn";
+  btn.type = "button";
+  btn.textContent = "Copy";
+  block.appendChild(btn);
+  bindCopyButton(btn);
+});
+
+// ===== Lesson anchors + checkboxes (progress) =====
+var STORAGE_KEY = "aia.progress.v1";
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
+  catch (e) { return {}; }
+}
+
+function saveProgress(p) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch (e) {}
+}
+
+var progress = loadProgress();
+var lessons = document.querySelectorAll(".module .lesson");
+
+lessons.forEach(function (lesson, idx) {
+  var h4 = lesson.querySelector("h4");
+  if (!h4) return;
+  var match = h4.textContent.match(/Lesson\s+(\d+\.\d+)/);
+  var lessonId = match ? ("lesson-" + match[1].replace(".", "-")) : ("lesson-" + (idx + 1));
+  lesson.id = lessonId;
+
+  var controls = document.createElement("div");
+  controls.className = "lesson-controls";
+
+  var checkLabel = document.createElement("label");
+  checkLabel.className = "lesson-check";
+  var check = document.createElement("input");
+  check.type = "checkbox";
+  check.checked = !!progress[lessonId];
+  check.addEventListener("change", function () {
+    progress = loadProgress();
+    if (check.checked) progress[lessonId] = true; else delete progress[lessonId];
+    saveProgress(progress);
+    lesson.classList.toggle("done", check.checked);
+    updateProgressMeter();
+  });
+  checkLabel.appendChild(check);
+  var checkText = document.createElement("span");
+  checkText.textContent = "Done";
+  checkLabel.appendChild(checkText);
+  controls.appendChild(checkLabel);
+
+  var anchor = document.createElement("a");
+  anchor.className = "lesson-anchor";
+  anchor.href = "#curriculum/" + lessonId;
+  anchor.title = "Copy link to this lesson";
+  anchor.textContent = "#";
+  anchor.addEventListener("click", function (e) {
+    e.preventDefault();
+    var url = location.origin + location.pathname + "#curriculum/" + lessonId;
+    navigator.clipboard.writeText(url).then(function () {
+      anchor.classList.add("copied");
+      setTimeout(function () { anchor.classList.remove("copied"); }, 1200);
+    }).catch(function () {});
+  });
+  controls.appendChild(anchor);
+
+  h4.appendChild(controls);
+  if (check.checked) lesson.classList.add("done");
+});
+
+function updateProgressMeter() {
+  var total = lessons.length;
+  var done = document.querySelectorAll(".lesson.done").length;
+  var pct = total === 0 ? 0 : Math.round((done / total) * 100);
+  var fill = document.getElementById("progress-fill");
+  var text = document.getElementById("progress-text");
+  if (fill) fill.style.width = pct + "%";
+  if (text) text.textContent = done + " of " + total + " lessons complete (" + pct + "%)";
+}
+updateProgressMeter();
+
+var resetBtn = document.getElementById("reset-progress");
+if (resetBtn) {
+  resetBtn.addEventListener("click", function () {
+    if (!confirm("Reset all lesson progress?")) return;
+    progress = {};
+    saveProgress(progress);
+    document.querySelectorAll(".lesson.done input[type='checkbox']").forEach(function (cb) { cb.checked = false; });
+    document.querySelectorAll(".lesson.done").forEach(function (l) { l.classList.remove("done"); });
+    updateProgressMeter();
+  });
+}
+
+// Deep-link to a specific lesson (#curriculum/lesson-1-2)
+if (rawHash.indexOf("curriculum/") === 0) {
+  var lessonId = rawHash.split("/")[1];
+  activateTab("curriculum", { preserveScroll: true });
+  setTimeout(function () {
+    var el = document.getElementById(lessonId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.add("flash");
+      setTimeout(function () { el.classList.remove("flash"); }, 1600);
+    }
+  }, 60);
+}
+
+// ===== Search (global) =====
+var searchInput = document.getElementById("search");
+var lessonIndex = [];
+
+function buildLessonIndex() {
+  var out = [];
+  document.querySelectorAll(".module").forEach(function (mod) {
+    var monthSpan = mod.querySelector(".month");
+    var month = monthSpan ? monthSpan.textContent.trim() : "";
+    var modH3 = mod.querySelector(".module-header h3");
+    var moduleTitle = modH3 ? modH3.textContent.trim() : "";
+    mod.querySelectorAll(".lesson").forEach(function (lesson) {
+      var h4 = lesson.querySelector("h4");
+      var title = h4 && h4.childNodes[0] ? h4.childNodes[0].textContent.trim() : "";
+      var body = lesson.innerText;
+      out.push({ id: lesson.id, month: month, moduleTitle: moduleTitle, title: title, body: body });
+    });
+  });
+  return out;
+}
+
+function makeSnippet(text, term) {
+  if (!term) return text.slice(0, 180);
+  var idx = text.toLowerCase().indexOf(term);
+  if (idx === -1) return text.slice(0, 180);
+  var start = Math.max(0, idx - 70);
+  var end = Math.min(text.length, idx + term.length + 110);
+  return (start > 0 ? "…" : "") + text.slice(start, end) + (end < text.length ? "…" : "");
+}
+
+function renderSearchResults(term) {
+  if (!kbGrid) return;
+  var t = term.toLowerCase();
+  if (!t) { renderKB(); return; }
+
+  var kbMatches = KB_ITEMS.filter(function (i) {
+    return i.title.toLowerCase().indexOf(t) !== -1 || i.summary.toLowerCase().indexOf(t) !== -1;
+  });
+  if (lessonIndex.length === 0) lessonIndex = buildLessonIndex();
+  var lessonMatches = lessonIndex.filter(function (l) {
+    return l.title.toLowerCase().indexOf(t) !== -1 || l.body.toLowerCase().indexOf(t) !== -1;
+  });
+
+  var parts = [];
+  if (lessonMatches.length) {
+    parts.push('<h3 class="search-section-h">Curriculum (' + lessonMatches.length + ')</h3>');
+    parts.push('<div class="search-list">');
+    lessonMatches.forEach(function (l) {
+      var snippet = makeSnippet(l.body, t);
+      parts.push(
+        '<a class="search-hit" href="#curriculum/' + l.id + '">' +
+          '<span class="search-hit-meta">' + escapeHtml(l.month) + ' · ' + escapeHtml(l.moduleTitle) + '</span>' +
+          '<h4>' + highlight(l.title, t) + '</h4>' +
+          '<p>' + highlight(snippet, t) + '</p>' +
+        '</a>'
+      );
+    });
+    parts.push('</div>');
+  }
+  if (kbMatches.length) {
+    parts.push('<h3 class="search-section-h">Knowledge Base (' + kbMatches.length + ')</h3>');
+    parts.push('<div class="kb-grid">');
+    kbMatches.forEach(function (i) {
+      parts.push(
+        '<div class="kb-card" data-cat="' + i.cat + '">' +
+          '<span class="kb-tag">' + escapeHtml(i.tag) + '</span>' +
+          '<h4>' + highlight(i.title, t) + '</h4>' +
+          '<p>' + highlight(i.summary, t) + '</p>' +
+        '</div>'
+      );
+    });
+    parts.push('</div>');
+  }
+  if (!parts.length) {
+    parts.push('<p class="kb-empty">No matches for "' + escapeHtml(term) + '".</p>');
+  }
+  kbGrid.innerHTML = parts.join("");
+
+  kbGrid.querySelectorAll(".search-hit").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      var id = a.getAttribute("href").split("/")[1];
+      activateTab("curriculum", { preserveScroll: true });
+      setTimeout(function () {
+        var el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          el.classList.add("flash");
+          setTimeout(function () { el.classList.remove("flash"); }, 1600);
+          history.replaceState(null, "", "#curriculum/" + id);
+        }
+      }, 30);
+    });
+  });
+}
+
+if (searchInput) {
+  var debounce;
+  searchInput.addEventListener("input", function (e) {
+    clearTimeout(debounce);
+    debounce = setTimeout(function () {
+      var term = e.target.value.trim();
+      if (!term) { renderKB(); return; }
+      activateTab("knowledge", { preserveScroll: true });
+      renderSearchResults(term);
+    }, 100);
+  });
+  document.addEventListener("keydown", function (e) {
+    var active = document.activeElement;
+    if (e.key === "/" && active.tagName !== "INPUT" && active.tagName !== "TEXTAREA") {
+      e.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+    }
+    if (e.key === "Escape" && active === searchInput) {
+      searchInput.value = "";
+      searchInput.blur();
+      renderKB();
+    }
+  });
+}
+
+// ===== Today =====
+var todayEl = document.getElementById("today");
+if (todayEl) {
+  todayEl.textContent = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+}
+
+</script>
+</body>
+</html>
